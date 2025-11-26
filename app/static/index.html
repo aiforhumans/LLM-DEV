@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LLM Testing Interface</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="app-container">
+        <header>
+            <h1>LLM Testing Interface</h1>
+            <div id="server-status" class="status-indicator">Checking connection...</div>
+        </header>
+        
+        <nav class="tabs">
+            <button class="tab-btn active" data-tab="playground">Playground</button>
+            <button class="tab-btn" data-tab="prompt-builder">Prompt Builder</button>
+            <button class="tab-btn" data-tab="ab-tester">A/B Tester</button>
+            <button class="tab-btn" data-tab="evaluation">Evaluation</button>
+            <button class="tab-btn" data-tab="workflows">Workflows</button>
+            <button class="tab-btn" data-tab="tools">Tools</button>
+        </nav>
+
+        <main class="tab-content">
+            <!-- Playground Tab -->
+            <div id="playground" class="tab-pane active">
+                <div class="playground-layout">
+                    <div class="chat-container">
+                        <div id="chat-history" class="chat-history"></div>
+                        <div class="chat-input-area">
+                            <textarea id="chat-input" placeholder="Type your message..."></textarea>
+                            <button id="send-btn">Send</button>
+                        </div>
+                    </div>
+                    <div class="settings-panel">
+                        <h3>Settings</h3>
+                        <label>Model</label>
+                        <select id="model-select"></select>
+                        <label>Temperature</label>
+                        <input type="range" id="temp-slider" min="0" max="1" step="0.1" value="0.7">
+                        <span id="temp-value">0.7</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Prompt Builder Tab -->
+            <div id="prompt-builder" class="tab-pane">
+                <h2>Prompt Builder</h2>
+                <div class="builder-layout">
+                    <div class="template-list">
+                        <h3>Templates</h3>
+                        <ul id="template-list-ul"></ul>
+                        <button id="new-template-btn">New Template</button>
+                    </div>
+                    <div class="template-editor">
+                        <input type="text" id="template-name" placeholder="Template Name">
+                        <textarea id="template-content" placeholder="Enter prompt template with {{variables}}..."></textarea>
+                        <button id="save-template-btn">Save Template</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- A/B Tester Tab -->
+            <div id="ab-tester" class="tab-pane">
+                <h2>A/B Response Tester</h2>
+                <div class="ab-controls">
+                    <textarea id="ab-prompt" placeholder="Enter prompt for comparison..."></textarea>
+                    <div class="model-selector">
+                        <label>Select Models to Compare:</label>
+                        <select id="ab-model-1"></select>
+                        <select id="ab-model-2"></select>
+                    </div>
+                    <button id="run-ab-test-btn">Run Comparison</button>
+                </div>
+                <div id="ab-results" class="ab-results-grid"></div>
+            </div>
+
+            <!-- Evaluation Tab -->
+            <div id="evaluation" class="tab-pane">
+                <h2>Evaluation Suite</h2>
+                <p>Dataset and Job management coming soon.</p>
+            </div>
+
+            <!-- Workflows Tab -->
+            <div id="workflows" class="tab-pane">
+                <h2>Agent Orchestrator</h2>
+                <p>Workflow builder coming soon.</p>
+            </div>
+
+            <!-- Tools Tab -->
+            <div id="tools" class="tab-pane">
+                <h2>Tool Management</h2>
+                <div class="tools-layout">
+                    <div class="tools-list">
+                        <ul id="tools-list-ul"></ul>
+                        <button id="new-tool-btn">New Tool</button>
+                    </div>
+                    <div class="tool-editor">
+                        <input type="text" id="tool-name" placeholder="Tool Name">
+                        <textarea id="tool-desc" placeholder="Description"></textarea>
+                        <input type="text" id="tool-endpoint" placeholder="Endpoint URL">
+                        <button id="save-tool-btn">Save Tool</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="main.js"></script>
+</body>
+</html>

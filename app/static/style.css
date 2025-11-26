@@ -1,0 +1,166 @@
+:root {
+    --bg-color: #1e1e1e;
+    --text-color: #e0e0e0;
+    --accent-color: #007acc;
+    --panel-bg: #252526;
+    --border-color: #3e3e42;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+}
+
+.app-container {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+header {
+    padding: 10px 20px;
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.status-indicator {
+    font-size: 0.9em;
+    color: #888;
+}
+
+.tabs {
+    display: flex;
+    background-color: var(--panel-bg);
+    border-bottom: 1px solid var(--border-color);
+}
+
+.tab-btn {
+    background: none;
+    border: none;
+    color: #888;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.tab-btn.active {
+    color: var(--text-color);
+    border-bottom: 2px solid var(--accent-color);
+}
+
+.tab-content {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+}
+
+.tab-pane {
+    display: none;
+    height: 100%;
+}
+
+.tab-pane.active {
+    display: block;
+}
+
+/* Playground */
+.playground-layout {
+    display: flex;
+    gap: 20px;
+    height: 100%;
+}
+
+.chat-container {
+    flex: 3;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--panel-bg);
+    border-radius: 5px;
+    padding: 10px;
+}
+
+.chat-history {
+    flex: 1;
+    overflow-y: auto;
+    margin-bottom: 10px;
+    padding: 10px;
+}
+
+.message {
+    margin-bottom: 10px;
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.user-msg {
+    background-color: #2d2d30;
+    align-self: flex-end;
+}
+
+.assistant-msg {
+    background-color: #3e3e42;
+}
+
+.chat-input-area {
+    display: flex;
+    gap: 10px;
+}
+
+#chat-input {
+    flex: 1;
+    background-color: #1e1e1e;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 8px;
+    border-radius: 4px;
+}
+
+.settings-panel {
+    flex: 1;
+    background-color: var(--panel-bg);
+    padding: 15px;
+    border-radius: 5px;
+}
+
+/* Common Inputs */
+input, select, textarea {
+    background-color: #3c3c3c;
+    border: 1px solid var(--border-color);
+    color: var(--text-color);
+    padding: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    cursor: pointer;
+    border-radius: 4px;
+}
+
+button:hover {
+    opacity: 0.9;
+}
+
+/* A/B Test */
+.ab-results-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 20px;
+}
+
+.ab-result-card {
+    background-color: var(--panel-bg);
+    padding: 15px;
+    border-radius: 5px;
+}
