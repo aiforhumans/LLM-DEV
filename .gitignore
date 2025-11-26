@@ -1,2 +1,26 @@
-/.github
-/.venv
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environment
+.venv/
+venv/
+env/
+
+# VS Code
+.vscode/
+
+# Environment variables
+.env
+
+# Local Data Persistence
+app/data/*.json
+!app/data/.gitkeep
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
