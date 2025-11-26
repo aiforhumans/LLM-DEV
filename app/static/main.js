@@ -66,7 +66,20 @@ function setupChat() {
     const sendBtn = document.getElementById('send-btn');
     const input = document.getElementById('chat-input');
     const history = document.getElementById('chat-history');
+    const clearBtn = document.getElementById('clear-chat-btn');
     
+    // Clear Chat
+    clearBtn.addEventListener('click', () => {
+        history.innerHTML = '';
+    });
+
+    // Update temp value display
+    const tempSlider = document.getElementById('temp-slider');
+    const tempValue = document.getElementById('temp-value');
+    tempSlider.addEventListener('input', (e) => tempValue.textContent = e.target.value);
+    
+    let lastResponseId = null;
+
     sendBtn.addEventListener('click', async () => {
         const text = input.value.trim();
         if (!text) return;
@@ -76,25 +89,99 @@ function setupChat() {
         input.value = '';
         
         const model = document.getElementById('model-select').value;
-        const temp = parseFloat(document.getElementById('temp-slider').value);
+        const temp = parseFloat(tempSlider.value);
+        const systemPrompt = document.getElementById('system-prompt').value.trim();
+        const reasoningEffort = document.getElementById('reasoning-effort').value;
         
+        // Build messages array (Legacy support)
+        const messages = [];
+        if (systemPrompt) {
+            messages.push({role: 'system', content: systemPrompt});
+        }
+        messages.push({role: 'user', content: text});
+
         // Create assistant message placeholder
         const assistantMsgDiv = appendMessage('assistant', '...');
         
         try {
+            // Prepare payload - prefer new API if reasoning is used or just default to it
+            const payload = {
+                model: model,
+                temperature: temp,
+                stream: true
+            };
+
+            // Use new API structure
+            payload.input = text;
+            if (lastResponseId) {
+                payload.previous_response_id = lastResponseId;
+            }
+            if (reasoningEffort) {
+                payload.reasoning_effort = reasoningEffort;
+            }
+            // Fallback for legacy endpoint if needed (backend handles it)
+            payload.messages = messages;
+
             const res = await fetch(`${API_BASE}/chat`, {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
-                body: JSON.stringify({
-                    messages: [{role: 'user', content: text}],
-                    model: model,
-                    temperature: temp,
-                    stream: false // Simple mode for now
-                })
+                body: JSON.stringify(payload)
             });
+
+            // Handle Streaming
+            const reader = res.body.getReader();
+            const decoder = new TextDecoder();
+            let fullText = '';
+            assistantMsgDiv.innerHTML = ''; // Clear loading dots
+
+            while (true) {
+                const {done, value} = await reader.read();
+                if (done) break;
+                
+                const chunk = decoder.decode(value);
+                const lines = chunk.split('\n');
+                
+                for (const line of lines) {
+                    if (line.startsWith('event: ')) {
+                        // Handle specific events if needed
+                        const eventType = line.slice(7).trim();
+                        // We might want to handle 'response.created' to get the ID
+                    }
+                    else if (line.startsWith('data: ')) {
+                        try {
+                            const rawData = line.slice(6);
+                            // Check if it's a JSON object or raw string
+                            let data;
+                            try {
+                                data = JSON.parse(rawData);
+                            } catch {
+                                data = rawData;
+                            }
+
+                            // Handle new API format
+                            if (data.delta) {
+                                // response.output_text.delta
+                                fullText += data.delta;
+                                assistantMsgDiv.innerHTML = marked.parse(fullText);
+                            } 
+                            else if (data.id) {
+                                // response.created or completed
+                                lastResponseId = data.id;
+                            }
+                            // Handle legacy format
+                            else if (data.data) {
+                                fullText += data.data;
+                                assistantMsgDiv.innerHTML = marked.parse(fullText);
+                            }
+                            
+                            history.scrollTop = history.scrollHeight;
+                        } catch (e) {
+                            console.error('Error parsing SSE chunk', e);
+                        }
+                    }
+                }
+            }
             
-            const data = await res.json();
-            assistantMsgDiv.textContent = data.choices[0].message.content;
         } catch (e) {
             assistantMsgDiv.textContent = 'Error: ' + e.message;
         }
@@ -105,7 +192,12 @@ function appendMessage(role, text) {
     const history = document.getElementById('chat-history');
     const div = document.createElement('div');
     div.className = `message ${role}-msg`;
-    div.textContent = text;
+    // Use innerHTML for assistant to support markdown, textContent for user for safety
+    if (role === 'assistant') {
+        div.innerHTML = marked.parse(text);
+    } else {
+        div.textContent = text;
+    }
     history.appendChild(div);
     history.scrollTop = history.scrollHeight;
     return div;

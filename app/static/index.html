@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LLM Testing Interface</title>
     <link rel="stylesheet" href="style.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 </head>
 <body>
     <div class="app-container">
@@ -35,6 +36,19 @@
                     </div>
                     <div class="settings-panel">
                         <h3>Settings</h3>
+                        <button id="clear-chat-btn" style="background-color: #d32f2f; margin-bottom: 15px;">Clear Chat</button>
+                        
+                        <label>System Instructions</label>
+                        <textarea id="system-prompt" rows="4" placeholder="You are a helpful assistant..."></textarea>
+                        
+                        <label>Reasoning Effort</label>
+                        <select id="reasoning-effort">
+                            <option value="">None</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
+
                         <label>Model</label>
                         <select id="model-select"></select>
                         <label>Temperature</label>

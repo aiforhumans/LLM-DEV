@@ -8,11 +8,13 @@ This project is designed to work seamlessly with **LM Studio** (or any OpenAI-co
 
 ### 1. Interactive Playground
 - **Multi-turn chat** with conversation history
-- **Streaming responses** via Server-Sent Events (SSE)
+- **Streaming responses** via Server-Sent Events (SSE) with Markdown rendering
+- **System Instructions** editor for defining agent personas
+- **Reasoning Effort** configuration (Low, Medium, High) for supported models
+- **Stateful Conversations** using LM Studio's new Responses API
 - **AI-powered prompt improvement** with the ✨ Prompt Generator
 - **File attachments** support (images, text files)
 - Configurable model, agent, max tokens, and temperature
-- System instructions editor with live character count
 
 ### 2. Prompt Builder
 - Create reusable **prompt templates** with `{{variable}}` placeholders
@@ -142,6 +144,7 @@ app/
 ### Local LLM Integration
 The project uses LM Studio's OpenAI-compatible HTTP API by default:
 - **Base URL**: `http://127.0.0.1:1234/v1`
+- **Responses API**: Supports the new `/v1/responses` endpoint for stateful chat and reasoning.
 - To use a different backend (Ollama, vLLM, etc.), modify `LocalLLMService` in `app/models/service.py`.
 
 ### Creating Custom Tools

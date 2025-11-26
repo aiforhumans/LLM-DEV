@@ -59,4 +59,44 @@ class LocalLLMService:
 
         return await self.client.chat.completions.create(**params)
 
+    async def create_response(
+        self,
+        model: str,
+        input_text: str,
+        previous_response_id: Optional[str] = None,
+        reasoning_effort: Optional[str] = None,
+        stream: bool = False
+    ) -> Any:
+        payload = {
+            "model": model,
+            "input": input_text,
+            "stream": stream
+        }
+        
+        if previous_response_id:
+            payload["previous_response_id"] = previous_response_id
+            
+        if reasoning_effort:
+            payload["reasoning"] = {"effort": reasoning_effort}
+
+        # Use httpx directly as this is a custom endpoint
+        if stream:
+            return self._stream_response(payload)
+        else:
+            response = await self.http_client.post("/responses", json=payload)
+            response.raise_for_status()
+            return response.json()
+
+    async def _stream_response(self, payload: Dict[str, Any]):
+        async with self.http_client.stream("POST", "/responses", json=payload) as response:
+            response.raise_for_status()
+            async for line in response.aiter_lines():
+                if line.startswith("event:"):
+                    self.current_event = line.replace("event:", "").strip()
+                elif line.startswith("data:"):
+                    data = line.replace("data:", "").strip()
+                    if data and self.current_event:
+                        yield {"event": self.current_event, "data": data}
+                        self.current_event = None
+
 service = LocalLLMService()
