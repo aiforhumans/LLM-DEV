@@ -27,6 +27,7 @@ class LocalLLMService:
                 "message": "LM Studio is reachable"
             }
         except Exception as e:
+            print(f"Health check failed: {e}")
             return {
                 "status": "offline",
                 "models": [],
@@ -37,7 +38,8 @@ class LocalLLMService:
         try:
             response = await self.client.models.list()
             return [model.model_dump() for model in response.data]
-        except Exception:
+        except Exception as e:
+            print(f"List models failed: {e}")
             return []
 
     async def chat_completion(

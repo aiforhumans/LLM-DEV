@@ -32,10 +32,15 @@ async function checkHealth() {
             statusEl.textContent = '🟢 LM Studio Connected';
             statusEl.style.color = '#4caf50';
         } else {
+            console.warn("Health check returned offline:", data);
             statusEl.textContent = '🔴 LM Studio Offline';
             statusEl.style.color = '#f44336';
+            if (data.message) {
+                statusEl.title = data.message; // Show error on hover
+            }
         }
     } catch (e) {
+        console.error("Health check error:", e);
         statusEl.textContent = '🔴 Backend Error';
         statusEl.style.color = '#f44336';
     }

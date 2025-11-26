@@ -29,20 +29,7 @@ This project is designed to work seamlessly with **LM Studio** (or any OpenAI-co
 - View latency metrics for each response
 - **Vote feedback** (Better/Worse) for manual evaluation
 
-### 4. Evaluation Suite
-- **Dataset Management**: Create datasets with query/ground_truth pairs (JSONL format)
-- **Built-in Templates**: Factual Q&A, Math, Summarization, Sentiment, Translation, Code Generation, Classification, RAG
-- **Evaluators**: F1 Score, BLEU, Similarity, Exact Match, Contains Match, Length Ratio, and Custom LLM-based evaluators
-- **Evaluation Jobs**: Run datasets against multiple evaluators with live streaming progress
-
-### 5. Agent Orchestrator
-- **Visual workflow builder** for multi-step agent pipelines
-- **Node types**: Start, Agent, Tool, Condition, End
-- **Drag-and-drop** canvas with edge connections
-- **Conditional routing** and variable interpolation (`{{input}}`, `{{prev_output}}`)
-- Execute workflows with JSON input and view step-by-step execution history
-
-### 6. Tools Management
+### 4. Tools Management
 - Define tools with name, description, endpoint, and input schema
 - Associate tools with specific models or agents
 - Toggle enabled/disabled state
@@ -101,6 +88,18 @@ This project is designed to work seamlessly with **LM Studio** (or any OpenAI-co
 
 3. **Access the Interface**:
    - Open your browser and navigate to `http://127.0.0.1:8000/`.
+
+## ❓ Troubleshooting
+
+### LM Studio Offline / Connection Errors
+If the status indicator shows "🔴 LM Studio Offline":
+1. **Check LM Studio**: Ensure the application is running and the Local Server is started (green "Start Server" button).
+2. **Verify Port**: The default port is `1234`. If you changed it, update `LM_STUDIO_BASE_URL` in `app/models/service.py` or set the environment variable.
+3. **Check Dependencies**: Ensure the backend has the required packages:
+   ```bash
+   pip install openai sse-starlette
+   ```
+4. **Console Logs**: Check the browser console (F12) and the backend terminal for specific error messages.
 
 ## 📂 Project Structure
 
@@ -372,6 +371,8 @@ async def calculator_tool(request: Request):
 
 ## 🔮 Upcoming Features
 
+- **Evaluation Suite**: Dataset management, built-in evaluators (BLEU, F1, etc.), and evaluation jobs.
+- **Agent Orchestrator**: Visual workflow builder for multi-step agent pipelines with conditional routing.
 - **Latency Dashboard**: Response time tracking and performance metrics
 - **Guardrail Tester**: Safety filters and PII detection testing
 - **Template Modes**: Role-play, Chain-of-Thought, few-shot templates
